@@ -8,11 +8,9 @@ import { Link } from "react-router-dom";
 
 const NotesCard = () => {
   const [cards, setCards] = useState([]);
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [flashCardCount, setFlashCardCount] = useState(0);
-  const [ques, setQues] = useState(true);
+  const [flipped, setFlipped] = useState(false);
 
   const getNotes = async () => {
     setIsLoading(true);
@@ -34,24 +32,23 @@ const NotesCard = () => {
 
   const showNextCard = () => {
     setFlashCardCount((prev) => (prev + 1) % cards.length);
+    setFlipped(false);
   };
 
   const showPreviousCard = () => {
     setFlashCardCount((prev) => (prev - 1 + cards.length) % cards.length);
+    setFlipped(false);
   };
 
-  const springProps = useSpring({
-    transform: `translateX(-${flashCardCount * 100}%)`,
+  const handleFlip = () => {
+    setFlipped(!flipped);
+  };
+
+  const { transform, opacity } = useSpring({
+    opacity: flipped ? 1 : 0,
+    transform: `rotateY(${flipped ? 180 : 0}deg)`,
     config: { tension: 300, friction: 30 },
   });
-
-  const handleQs = () => {
-    if (ques) {
-      setQues(false);
-    } else {
-      setQues(true);
-    }
-  };
 
   return (
     <div className="relative bg-gray-100 p-6">
@@ -59,52 +56,82 @@ const NotesCard = () => {
         <Spinner />
       ) : (
         <>
-
-        {cards.length === 0 && (
-          <p className="text-red-600 text-center text-2xl">Nothing to show here!</p>
-        )}
+          {cards.length === 0 && (
+            <p className="text-red-600 text-center text-2xl">
+              Nothing to show here!
+            </p>
+          )}
 
           {cards.length > 0 && (
-            <div className="overflow-hidden">
-              <animated.div style={springProps} className="flex">
-                {cards.map((card, index) => (
-                  <div
-                    key={card.id}
-                    className="bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 flex-none w-full mt-6"
-                  >
-                    <div className="text-3xl font-bold" onClick={handleQs}>
-                      <span className="font-bold text-3xl">S.No:</span>{" "}
-                      {index + 1}
-                    </div>
-                    <div className="text-xl mt-4">
-                      {ques ? (
-                        <p className="font-bold">
-                          Question:{" "}
-                          <span className="font-normal">{card.question}</span>
-                        </p>
-                      ) : (
-                        <p className="font-bold">
-                          Answer:{" "}
-                          <span className="font-normal">{card.answer}</span>
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-start justify-start mt-4 text-2xl">
-                      {" "}
-                      <Link to={`/cards/edit/${card._id}`}>
-                        <MdEdit className="cursor-pointer text-4xl text-green-500 transition-colors mx-2" />
-                      </Link>
-                      <Link to={`/cards/delete/${card._id}`}>
-                        <MdDelete className="cursor-pointer text-4xl text-red-500 transition-colors mx-2" />
-                      </Link>
-                    </div>
+            <div className="relative w-full min-h-[70vh] h-auto perspective">
+              <animated.div
+                className="absolute w-full"
+                style={{
+                  transform,
+                  transformStyle: "preserve-3d",
+                }}
+                onClick={handleFlip}
+              >
+                <div
+                  className="absolute w-full min-h-[70vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out"
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <div className="text-3xl font-bold">
+                    <span className="font-bold text-3xl">S.No:</span>{" "}
+                    {flashCardCount + 1}
                   </div>
-                ))}
+                  <div className="text-2xl mt-4">
+                    <p className="font-bold">
+                      <span className="text-green-700">Question: </span>
+                      <span className="font-normal">
+                        {cards[flashCardCount].question}
+                      </span>
+                    </p>
+                  </div>{" "}
+                  <div className="flex items-center justify-start mt-4 text-2xl absolute top-4 right-4">
+                    <Link to={`/cards/edit/${cards[flashCardCount]._id}`}>
+                      <MdEdit className="cursor-pointer text-4xl text-green-500 transition-colors mx-2" />
+                    </Link>
+                    <Link to={`/cards/delete/${cards[flashCardCount]._id}`}>
+                      <MdDelete className="cursor-pointer text-4xl text-red-500 transition-colors mx-2" />
+                    </Link>
+                  </div>
+                </div>
+
+                <animated.div
+                  className="relative w-full min-h-[70vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out"
+                  style={{
+                    transform: "rotateY(180deg)",
+                    backfaceVisibility: "hidden",
+                    opacity,
+                  }}
+                >
+                  <div className="text-3xl font-bold">
+                    <span className="font-bold text-3xl">S.No:</span>{" "}
+                    {flashCardCount + 1}
+                  </div>
+                  <div className="text-2xl mt-4">
+                    <p className="font-bold">
+                      <span className="text-green-700">Answer: </span>
+                      <span className="font-normal">
+                        {cards[flashCardCount].answer}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-start mt-4 text-2xl absolute top-4 right-4">
+                    <Link to={`/cards/edit/${cards[flashCardCount]._id}`}>
+                      <MdEdit className="cursor-pointer text-4xl text-green-500 transition-colors mx-2" />
+                    </Link>
+                    <Link to={`/cards/delete/${cards[flashCardCount]._id}`}>
+                      <MdDelete className="cursor-pointer text-4xl text-red-500 transition-colors mx-2" />
+                    </Link>
+                  </div>
+                </animated.div>
               </animated.div>
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-10 mt-8">
+          <div className="flex items-center justify-center gap-10 mt-6">
             <FaArrowCircleLeft
               className="cursor-pointer hover:text-purple-800 transition-all delay-75 text-[50px] text-purple-700"
               onClick={showPreviousCard}
