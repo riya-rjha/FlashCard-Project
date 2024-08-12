@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.image {
+  background: url('../Images/AddCards.avif');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.submitBTN {
+  width: -webkit-fill-available;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
