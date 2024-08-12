@@ -63,7 +63,7 @@ const NotesCard = () => {
           )}
 
           {cards.length > 0 && (
-            <div className="relative w-full min-h-[70vh] h-auto perspective">
+            <div className="relative w-full min-h-[50vh] h-auto perspective">
               <animated.div
                 className="absolute w-full"
                 style={{
@@ -73,14 +73,14 @@ const NotesCard = () => {
                 onClick={handleFlip}
               >
                 <div
-                  className="absolute w-full min-h-[70vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out"
+                  className="absolute w-full min-h-[50vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl transition-transform duration-300 ease-in-out"
                   style={{ backfaceVisibility: "hidden" }}
                 >
-                  <div className="text-3xl font-bold">
+                  <div className="text-2xl font-bold">
                     <span className="font-bold text-3xl">S.No:</span>{" "}
                     {flashCardCount + 1}
                   </div>
-                  <div className="text-2xl mt-4">
+                  <div className="text-lg mt-4">
                     <p className="font-bold">
                       <span className="text-green-700">Question: </span>
                       <span className="font-normal">
@@ -99,18 +99,18 @@ const NotesCard = () => {
                 </div>
 
                 <animated.div
-                  className="relative w-full min-h-[70vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out"
+                  className="relative w-full min-h-[50vh] h-auto bg-gradient-to-r from-purple-200 to-purple-300 text-gray-800 border border-purple-300 rounded-lg shadow-md p-6 backface-hidden cursor-pointer hover:shadow-xl transition-transform duration-300 ease-in-out"
                   style={{
                     transform: "rotateY(180deg)",
                     backfaceVisibility: "hidden",
                     opacity,
                   }}
                 >
-                  <div className="text-3xl font-bold">
+                  <div className="text-2xl font-bold">
                     <span className="font-bold text-3xl">S.No:</span>{" "}
                     {flashCardCount + 1}
                   </div>
-                  <div className="text-2xl mt-4">
+                  <div className="text-lg mt-4">
                     <p className="font-bold">
                       <span className="text-green-700">Answer: </span>
                       <span className="font-normal">
